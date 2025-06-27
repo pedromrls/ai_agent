@@ -21,23 +21,24 @@ from google import genai
 
 
 def main ():
-    if len(sys.argv) >= 3:
-        print("Error: too many arguments")
+    args = sys.argv[1:]
+
+    if not args:
+        print("AI Code Assistant")
+        print('\nUsage: python main.py "your prompt here"')
+        print('Example: python main.py "How do I build a calculator app?"')
         sys.exit(1)
-    elif len(sys.argv) <= 1:
-        print("Error: please provide one valid argument")
-        sys.exit(1)
-    else:
-        load_dotenv()
-        api_key = os.environ.get("GEMINI_API_KEY")
-        client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model="gemini-2.0-flash-001",
-            contents=sys.argv[1],
-        )
-        print(response.text)
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    user_prompt = " ".join(args)
+    load_dotenv()
+    api_key = os.environ.get("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-001",
+        contents=sys.argv[1],
+    )
+    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    print(f"Response: \n{response.text}")
 
 if __name__ == "__main__":
     main()
