@@ -1,2 +1,0 @@
-this file is just to test that git credentials has been set properly
-
