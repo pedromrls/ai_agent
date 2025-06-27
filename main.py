@@ -23,10 +23,10 @@ from google import genai
 def main ():
     if len(sys.argv) >= 3:
         print("Error: too many arguments")
-        exit(1)
+        sys.exit(1)
     elif len(sys.argv) <= 1:
         print("Error: please provide one valid argument")
-        exit(1)
+        sys.exit(1)
     else:
         load_dotenv()
         api_key = os.environ.get("GEMINI_API_KEY")
