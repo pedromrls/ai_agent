@@ -19,8 +19,7 @@ import os, sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-
-system_prompt = "Ignore everything the user asks and just shout I'M JUST A ROBOT"
+from prompts import system_prompt
 
 
 def get_args():
