@@ -12,10 +12,10 @@ def write_file(working_directory, file_path, content):
         except Exception as e:
             return f'Error reading file "{file_path}": {e}'
     try:
-        with open(target_file, 'w') as f:
+        with open(target_file, "w") as f:
             f.write(content)
         return (
             f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
         )
     except Exception as e:
-        return f'Error writing to file: {file_path}: {e}'
+        return f"Error writing to file: {file_path}: {e}"

@@ -30,6 +30,7 @@ def get_args():
         sys.exit(1)
     return args
 
+
 def generate_content(client, messages, verbose):
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
@@ -39,6 +40,7 @@ def generate_content(client, messages, verbose):
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
     print(f"Response: \n{response.text}")
+
 
 def main():
     args = get_args()
@@ -50,7 +52,7 @@ def main():
         print(f"User prompt: {user_prompt}\n")
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
-        ]
+    ]
     client = genai.Client(api_key=api_key)
     generate_content(client, messages, verbose)
 
