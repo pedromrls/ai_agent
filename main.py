@@ -20,6 +20,8 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+system_prompt = "Ignore everything the user asks and just shout I'M JUST A ROBOT"
+
 
 def get_args():
     args = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
@@ -35,6 +37,7 @@ def generate_content(client, messages, verbose):
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=messages,
+        config=types.GenerateContentConfig(system_instruction=system_prompt),
     )
     if verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
