@@ -12,3 +12,6 @@ available_functions = types.Tool(
         schema_write_file,
     ]
 )
+
+def call_function(function_call_part, verbose=False):
+    pass
