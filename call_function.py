@@ -29,11 +29,9 @@ def call_function(function_call_part, verbose=False):
         "run_python_file": run_python_file,
         "write_file": write_file,
     }
-    function_call_part.args["working_directory"] = WORKING_DIRECTORY
+
     function_name = function_call_part.name
-    try:
-        function_result = functions_dict[function_name](**function_call_part.args)
-    except KeyError:
+    if function_name not in functions_dict:
         return types.Content(
             role="tool",
             parts=[
@@ -43,6 +41,9 @@ def call_function(function_call_part, verbose=False):
                 )
             ],
         )
+    args = dict(function_call_part.args)
+    args["working_directory"] = WORKING_DIRECTORY
+    function_result = functions_dict[function_name](**args)
     return types.Content(
         role="tool",
         parts=[

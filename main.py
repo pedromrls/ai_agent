@@ -21,6 +21,7 @@ from google import genai
 from google.genai import types
 from prompts import system_prompt
 from call_function import available_functions, call_function
+from config import MAX_ITERS
 
 
 def get_args():
@@ -41,26 +42,32 @@ def generate_content(client, messages, verbose):
             tools=[available_functions], system_instruction=system_prompt
         ),
     )
+    if response.candidates:
+        for candidate in response.candidates:
+            messages.append(candidate.content)
     if verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
     if not response.function_calls:
-        return f"Response: \n{response.text}"
+        return response.text
+
     function_responses = []
     for function_call_part in response.function_calls:
         function_call_result = call_function(function_call_part, verbose)
-        try:
-            expected_response = function_call_result.parts[0].function_response.response
-
-        except (AttributeError, IndexError) as e:
-            raise Exception(f"Fatal exception of some sort: {e}")
+        if (
+            not function_call_result.parts
+            or not function_call_result.parts[0].function_response
+        ):
+            raise Exception(f"Empty function call result")
 
         if verbose:
-            print(f"-> {expected_response}")
+            print(f"-> {function_call_result.parts[0].function_response.response}")
         function_responses.append(function_call_result.parts[0])
     if not function_responses:
         raise Exception("No function responses generated, exiting...")
+
+    messages.append(types.Content(role="user", parts=function_responses))
 
 
 def main():
@@ -75,7 +82,19 @@ def main():
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
     client = genai.Client(api_key=api_key)
-    generate_content(client, messages, verbose)
+    iter = 0
+    while iter < MAX_ITERS:
+        try:
+            response = generate_content(client, messages, verbose)
+            if response:
+                print("Final response:")
+                print(response)
+                break
+            iter += 1
+        except Exception as e:
+            raise Exception(f"Fatal error: {e}")
+    else:
+        print(f"Maximum iterations ({MAX_ITERS}) reached.")
 
 
 if __name__ == "__main__":
