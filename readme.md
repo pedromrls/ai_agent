@@ -42,7 +42,7 @@ cp .env.example .env
 git clone https://github.com/yourusername/llm-code-assistant.git
 cd llm-code-assistant
 
-# Install dependencies (using uv since you have uv.lock)
+# Install dependencies (using uv since uv.lock is already in the repo)
 uv sync
 
 # Or if using pip
@@ -213,7 +213,7 @@ Please ensure all contributions follow the existing code style and include appro
 ```
 MIT License
 
-Copyright (c) 2024 Your Name
+Copyright (c) 2024 Pedro Morales
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
